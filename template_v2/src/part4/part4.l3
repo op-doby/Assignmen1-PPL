@@ -17,10 +17,78 @@
 
 
 
+(define duplicate-by-number
+    (lambda (num times)
+        (if(eq? times 0)
+            '()
+            (cons num
+                (duplicate-by-number num (- times 1))))))
 
+
+(define duplicate-items-2
+    (lambda (lst dup-count)
+        (if((eq? dup-count '())
+            '()
+            ((if(eq? lst '())
+                ()'
+                (append(duplicate-by-number(((car lst) (car dup-count)) duplicate-items-2(((cdr lst) (cdr dup-count))))))))))))
+            
 
 
 (define duplicate-items
-    (lambda (lst, dup-count)
-    @todo    
-))
+    (lambda (lst dup-count)
+        (if(eq? lst '())
+            '()
+            append(duplicate-by-number(((car lst) (car dup-count)) duplicate-items-2((cdr lst) (cdr dup-count)))))))
+
+
+//length
+(define length 
+    (lambda(lst)
+        (if(eq? lst '())
+            0
+            (1+(length(cdr lst))))))
+
+//nth
+(define nth
+    (lambda (lst n)
+        (if(eq? lst '())
+        '()
+        (if(= n 0)
+            (car lst)
+            (nth(cdr lst (- n 1))))))
+
+
+)
+
+//modulo x%y
+(define modulo
+    (lambda (x y)
+        (if(< x y)
+            x
+            (modulo (- x y) y))))
+
+//chat 
+(define get-cyclic
+  (lambda (lst idx)
+    (list-ref lst (modulo idx (length (lst))))))
+
+
+//ours
+(define get-cyclic
+  (lambda (lst index)
+    (nth lst (modulo index (length (lst))))))
+
+
+//
+(define duplicate-items
+  (lambda (lst dup-count)
+    ;; Helper function to iterate through lst and use dup-count cyclically
+    (letrec ((duplicate-helper
+               (lambda (lst idx)
+                 (if (null? lst)
+                     '()
+                     (let ((count (get-cyclic dup-count idx)))
+                       (append (duplicate-by-number (car lst) count)
+                               (duplicate-helper (cdr lst) (+ idx 1))))))))
+      (duplicate-helper lst 0))))
