@@ -20,17 +20,17 @@ export const isPaired: (s: string) => boolean = (s: string) : boolean => {
     try{
         return (stringToArray(s).reduce((acc,curr) => 
         {
-        if(isOpen(s))
-            return (acc + s);
-        else if(isClose(s)){
-            if(isMatch(s,acc[acc.length-1]))
+        if(isOpen(curr))
+            return (acc+curr);
+        else if(isClose(curr)){
+            if(acc.length>0 && isMatch(curr,acc[acc.length-1])) // added 
                 return acc.substring(0,acc.length-1);
             else 
                 throw false;
             }
         else 
             return acc;
-        },"")).length ==0;     
+        },"")).length==0;     
     } catch(e){
         return false;
     }
@@ -44,12 +44,11 @@ export const isClose : (s: string) => boolean = (s: string) : boolean => {
 }
 
 
-export const isMatch: (s1:string , s2:string) => boolean = (s1:string , s2:string) : boolean => {
-    return s1===s2;
-} 
-
-
-
+export const isMatch: (s1:string , s2:string) => boolean = (s1:string , s2:string) : boolean =>{
+    if((s1===')'&&s2==='(')||(s1===']'&&s2==='[')||(s1==='}'&&s2==='{'))
+        return true;
+    return false;
+}  
 
 
 /* Question 3 */
@@ -59,31 +58,7 @@ export type WordTree = {
 }
 
 export const treeToSentence: (t:WordTree) => string = (t:WordTree):string =>
-    (t.children.length === 0) ?  t.root : (t.root + (t.children).map(treeToSentence));
+    (t.children.length === 0) ?  t.root : ((t.root+" ") + (t.children).map(treeToSentence).join(" "));
     
 
-    const t1: WordTree = {
-        root: "Hello",
-        children: [
-        {
-        root: "students",
-        children: [
-        {
-        root: "how",
-        children: []
-        }
-        ]
-        },
-        {
-        root: "are",
-        children: []
-        },
-        {
-        root: "you?",
-        children: []
-        },
-        ]
-        }
-        treeToSentence(t1); // ==> Hello students how are you?
-
-
+   
